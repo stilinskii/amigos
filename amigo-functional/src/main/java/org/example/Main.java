@@ -1,7 +1,10 @@
 package org.example;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -46,6 +49,7 @@ public class Main {
 
 
         Consumer<String> stringConsumer = name -> System.out.println(name);
+        Consumer<String> stringConsumerMethodReference = System.out::println;
         names.forEach(stringConsumer);
         names.forEach(name -> {
             System.out.println(name);
@@ -56,5 +60,36 @@ public class Main {
         names.stream().map(name -> name.getBytes());
 
 
+        System.out.println(incrementByOneFunc.apply(1));
+        List.of(1,2,3).forEach(Main::incrementByOne);
+
+        List<Integer> integers = List.of(1, 2, 3)
+                .stream()
+                .map(Main::incrementByOne)
+                .collect(Collectors.toList());
+
+        System.out.println(integers);
+
+
+        System.out.println("[Chaining Functions]");
+        Function<Integer, Integer> combinedFunction = incrementByOneFunc.andThen(doubleFunc);
+        System.out.println(combinedFunction.apply(1));
+        System.out.println(incrementByOneFunc.andThen(doubleFunc).apply(1));
     }
+
+
+
+    static Function<Integer, Integer> incrementByOneFunc =
+            n -> n + 1;
+
+    static Function<Integer, Integer> doubleFunc =
+            n -> n * 2;
+
+    static int incrementByOne(int n){
+        return n + 1;
+    }
+
+
+//    record Person(String name,int age);
+    static BiFunction<String, Integer, String> messageFunc;
 }
